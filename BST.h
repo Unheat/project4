@@ -26,13 +26,16 @@ private:
     Node* root;
 
     void transplant(Node* u, Node* v); //remove helper
-
+    Node* search(K key) const;
+    Node* treeMinimum(Node* x);
+    Node* treeMaximum(Node* x);
 public:
     BST();                   
     ~BST();                  
     bool empty() const;
     void insert(D d, K k);
     D get(K k) const;
+    
     void remove(K k);
     D max_data() const;
     K max_key() const;
@@ -42,6 +45,7 @@ public:
     string to_string() const;
     string in_order() const;
     void trim(K low, K high);
+    void clear(Node* node);
 };
 
 #include "BST.cpp" 
