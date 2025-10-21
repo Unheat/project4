@@ -2,6 +2,10 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <queue>        // for std::queue
+#include <stack>        // for std::stack
+#include <functional>   // for std::function
+#include <stdexcept> 
 using namespace std;
 template <typename D, typename K>
 BST<D, K>::Node::Node(D d, K k) {
@@ -38,14 +42,14 @@ typename BST<D, K>::Node* BST<D, K>::search(K key) const {
     return target;
 }
 template <typename D, typename K>
-typename BST<D, K>::Node* BST<D, K>::treeMinimum(Node* x){
+typename BST<D, K>::Node* BST<D, K>::treeMinimum(Node* x) const {
     while(x->left != nullptr){
         x = x->left;
     }
     return x;
 }
 template <typename D, typename K>
-typename BST<D, K>::Node* BST<D, K>::treeMaximum(Node* x){
+typename BST<D, K>::Node* BST<D, K>::treeMaximum(Node* x) const {
     while(x->right != nullptr){
         x = x->right;
     }
@@ -225,7 +229,7 @@ string BST<D, K>::in_order() const{
         if (x == nullptr) return;
         inorder(x->left);
         if (!result.empty()) result += " ";
-        result += to_string(x->key);
+        result += std::to_string(x->key);
         inorder(x->right);
     };
     inorder(root);

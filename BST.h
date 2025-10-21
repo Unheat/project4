@@ -27,8 +27,8 @@ private:
 
     void transplant(Node* u, Node* v); //remove helper
     Node* search(K key) const;
-    Node* treeMinimum(Node* x);
-    Node* treeMaximum(Node* x);
+    Node* treeMinimum(Node* x) const;
+    Node* treeMaximum(Node* x) const;
 public:
     BST();                   
     ~BST();                  
