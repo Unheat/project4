@@ -237,45 +237,26 @@ string BST<D, K>::in_order() const{
 }
 template <typename D, typename K>
 void BST<D, K>::trim(K low, K high){
-    function<void(Node*)> destroy = [&](Node* t) {
-        if (!t) return;
-        destroy(t->left);
-        destroy(t->right);
-        delete t;
-    };
-
-    function<Node*(Node*)> trimRec = [&](Node* node) -> Node* {
+    if(!root) return;
+    function<Node*(Node*)> trimRec = [&](Node* node) -> Node*{
         if (!node) return nullptr;
-
-        if (node->key < low) {
+        if(node->key <low){
             Node* rightTrim = trimRec(node->right);
-            destroy(node->left);
-            // delete current node (since it's out of range and not returned)
-            node->left = node->right = nullptr;
+            clear(node->left);
             delete node;
-            if (rightTrim) rightTrim->parent = nullptr; // parent fixed at caller
             return rightTrim;
         }
-        if (node->key > high) {
+        if(node->key >high){
             Node* leftTrim = trimRec(node->left);
-            destroy(node->right);
-            node->left = node->right = nullptr;
+            clear(node->right);
             delete node;
-            if (leftTrim) leftTrim->parent = nullptr;
             return leftTrim;
         }
-
-        Node* L = trimRec(node->left);
-        if (L) { L->parent = node; }
-        node->left = L;
-
-        Node* R = trimRec(node->right);
-        if (R) { R->parent = node; }
-        node->right = R;
-
+        node->left = trimRec(node->left);
+        node->right = trimRec(node->right);
         return node;
-    };
-
+    }
+    //call the recursive lambda function
     root = trimRec(root);
     if (root) root->parent = nullptr;
 }
