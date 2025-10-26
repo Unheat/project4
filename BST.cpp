@@ -7,14 +7,36 @@
 #include <functional>   // for std::function
 #include <stdexcept> 
 using namespace std;
+
+//=================================================
+// Node (Constructor)
+// Initializes a new Node for the BST.
+// Parameters:
+//  d: The data of type D to be stored in the node.
+//  k: The key of type K to be stored in the node.
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
-BST<D, K>::Node::Node(D d, K k) {
+BST<D, K>::Node::Node(D d, K k) {11
     data = d;
     key = k;
     left = nullptr;
     right = nullptr;
     parent = nullptr;
 }
+
+//=================================================
+// transplant
+// A private helper function that replaces one subtree
+// as a child of its parent with another subtree.
+// helper for the remove operation.
+// Parameters:
+//  u: A pointer to the node to be replaced.
+//  v: A pointer to the node that will replace u.
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 void BST<D,K>::transplant(Node* u, Node* v) {
     if (u->parent == nullptr)
@@ -27,6 +49,16 @@ void BST<D,K>::transplant(Node* u, Node* v) {
     if (v != nullptr)
         v->parent = u->parent;
 }
+
+//=================================================
+// search
+// Searches the tree for a node with a given key.
+// Parameters:
+//  key: The key of type K to search for.
+// Return Value:
+//  A pointer to the Node containing the key, or
+//  nullptr if the key is not found.
+//=================================================
 template <typename D, typename K>
 typename BST<D, K>::Node* BST<D, K>::search(K key) const {
     Node* target = root; 
@@ -41,6 +73,15 @@ typename BST<D, K>::Node* BST<D, K>::search(K key) const {
     }
     return target;
 }
+
+//=================================================
+// treeMinimum
+// Finds the node with the minimum key in a subtree.
+// Parameters:
+//  x: A pointer to the root of the subtree to search.
+// Return Value:
+//  A pointer to the Node with the minimum key.
+//=================================================
 template <typename D, typename K>
 typename BST<D, K>::Node* BST<D, K>::treeMinimum(Node* x) const {
     while(x->left != nullptr){
@@ -48,6 +89,15 @@ typename BST<D, K>::Node* BST<D, K>::treeMinimum(Node* x) const {
     }
     return x;
 }
+
+//=================================================
+// treeMaximum
+// Finds the node with the maximum key in a subtree.
+// Parameters:
+//  x: A pointer to the root of the subtree to search.
+// Return Value:
+//  A pointer to the Node with the maximum key.
+//=================================================
 template <typename D, typename K>
 typename BST<D, K>::Node* BST<D, K>::treeMaximum(Node* x) const {
     while(x->right != nullptr){
@@ -55,20 +105,59 @@ typename BST<D, K>::Node* BST<D, K>::treeMaximum(Node* x) const {
     }
     return x;
 }
+
+//=================================================
+// BST (Default Constructor)
+// Initializes an empty Binary Search Tree by setting
+// the root pointer to nullptr.
+// Parameters:
+//  (none)
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 BST<D, K>::BST() {
     root = nullptr;
 }
+
+//=================================================
+// ~BST (Destructor)
+// Deallocates all memory used by the BST by calling
+// the private clear helper function on the root.
+// Parameters:
+//  (none)
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 BST<D, K>::~BST() {
     clear(root);
     root = nullptr;
 }
+
+//=================================================
+// empty
+// Checks if the BST is empty.
+// Parameters:
+//  (none)
+// Return Value:
+//  True if the tree's root is nullptr, false otherwise.
+//=================================================
 template <typename D, typename K>
 bool BST<D, K>::empty() const {
     return root == nullptr;
 }
 
+//=================================================
+// insert
+// Creates and inserts a new node with data `d` and
+// key `k` into the BST, maintaining the BST property.
+// Parameters:
+//  d: The data of type D for the new node.
+//  k: The key of type K for the new node.
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 void BST<D, K>::insert(D d, K k) {
     Node* z = new Node(d, k);
@@ -85,6 +174,16 @@ void BST<D, K>::insert(D d, K k) {
     else if (k < y->key) y->left = z;
     else y->right = z;
 }
+
+//=================================================
+// get
+// Retrieves the data associated with a given key.
+// Parameters:
+//  k: The key of type K to search for.
+// Return Value:
+//  The data of type D associated with the key, or a
+//  default-constructed object of type D if not found.
+//=================================================
 template <typename D, typename K>
 D BST<D, K>::get(K k) const {
     Node* x = search(k);
@@ -100,7 +199,15 @@ D BST<D, K>::get(K k) const {
     return D{}; // not found -> default
 }
 
-
+//=================================================
+// remove
+// Removes the first node found with the given key `k`
+// from the tree, maintaining the BST property.
+// Parameters:
+//  k: The key of type K to remove.
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 void BST<D, K>::remove(K k){
     Node* z = search(k);
@@ -128,6 +235,17 @@ void BST<D, K>::remove(K k){
         y->left->parent = y;
     }   
 }  
+
+//=================================================
+// max_data
+// Finds and returns the data of the node with the
+// largest key in the tree.
+// Parameters:
+//  (none)
+// Return Value:
+//  The data of type D from the maximum node, or a
+//  default-constructed D if the tree is empty.
+//=================================================
 template <typename D, typename K>
 D BST<D, K>::max_data() const{
     if(!root) {
@@ -142,6 +260,16 @@ D BST<D, K>::max_data() const{
     return x->data;
 
 }
+
+//=================================================
+// max_key
+// Finds and returns the largest key in the tree.
+// Parameters:
+//  (none)
+// Return Value:
+//  The key of type K from the maximum node, or a
+//  default-constructed K if the tree is empty.
+//=================================================
 template <typename D, typename K>
 K BST<D, K>::max_key() const{
     if(!root) {
@@ -154,6 +282,17 @@ K BST<D, K>::max_key() const{
     return x->key;
 
 }
+
+//=================================================
+// min_data
+// Finds and returns the data of the node with the
+// smallest key in the tree.
+// Parameters:
+//  (none)
+// Return Value:
+//  The data of type D from the minimum node, or a
+//  default-constructed D if the tree is empty.
+//=================================================
 template <typename D, typename K>
 D BST<D, K>::min_data() const{
     if(!root) {
@@ -166,6 +305,16 @@ D BST<D, K>::min_data() const{
     return x->data;
 
 }
+
+//=================================================
+// min_key
+// Finds and returns the smallest key in the tree.
+// Parameters:
+//  (none)
+// Return Value:
+//  The key of type K from the minimum node, or a
+//  default-constructed K if the tree is empty.
+//=================================================
 template <typename D, typename K>
 K BST<D, K>::min_key() const{
     if(!root) {
@@ -177,6 +326,18 @@ K BST<D, K>::min_key() const{
     }
     return x->key;
 }
+
+//=================================================
+// successor
+// Finds the in-order successor of a given key `k`.
+// The successor is the node with the smallest key
+// that is larger than `k`.
+// Parameters:
+//  k: The key of type K to find the successor of.
+// Return Value:
+//  The key of the successor node, or a default-
+//  constructed K if no successor exists.
+//=================================================
 template <typename D, typename K>
 K BST<D, K>::successor(K k) const{
     Node* x = search(k);
@@ -193,6 +354,15 @@ K BST<D, K>::successor(K k) const{
     }
 }
 
+//=================================================
+// to_string
+// Generates a string representation of the tree's keys
+// in level-order (breadth-first traversal).
+// Parameters:
+//  (none)
+// Return Value:
+//  A space-separated string of keys.
+//=================================================
 template <typename D, typename K>
 string BST<D, K>::to_string() const{
     std::stringstream s;
@@ -223,10 +393,20 @@ string BST<D, K>::to_string() const{
 
     return s.str();
 }
+
+//=================================================
+// in_order
+// Generates a string representation of the tree's keys
+// in sorted (in-order) traversal.
+// Parameters:
+//  (none)
+// Return Value:
+//  A space-separated string of keys in ascending order.
+//=================================================
 template <typename D, typename K>
 string BST<D, K>::in_order() const{
     stringstream ss;
-    bool first = true; //no space on first node
+    bool first = true; //no space before first node
     // recursive lambda
     function<void(Node*)> inorder = [&](Node* x) {
         if (x == nullptr) return;
@@ -239,6 +419,17 @@ string BST<D, K>::in_order() const{
     inorder(root);
     return ss.str();
 }
+
+//=================================================
+// trim
+// Removes all nodes from the tree whose keys are
+// outside the inclusive range [low, high].
+// Parameters:
+//  low: The lower bound of the key range to keep.
+//  high: The upper bound of the key range to keep.
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 void BST<D, K>::trim(K low, K high){
     if(!root) return;
@@ -264,6 +455,16 @@ void BST<D, K>::trim(K low, K high){
     root = trimRec(root);
     if (root) root->parent = nullptr;
 }
+
+//=================================================
+// clear
+// A private helper function that recursively deletes
+// all nodes in a subtree to deallocate memory.
+// Parameters:
+//  node: A pointer to the root of the subtree to clear.
+// Return Value:
+//  (none)
+//=================================================
 template <typename D, typename K>
 void BST<D, K>::clear(Node* node){
     if (!node) return;
