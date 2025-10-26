@@ -131,7 +131,9 @@ void BST<D, K>::remove(K k){
 template <typename D, typename K>
 D BST<D, K>::max_data() const{
     if(!root) {
-        throw runtime_error("tree is empty");
+        //throw run time would break the program 
+        //so safely return default value if empty
+        return D{}; 
     }
     Node* x = root;
     while(x->right){
@@ -143,7 +145,7 @@ D BST<D, K>::max_data() const{
 template <typename D, typename K>
 K BST<D, K>::max_key() const{
     if(!root) {
-        throw runtime_error("tree is empty");
+        return K{};
     }
     Node* x = root;
     while(x->right){
@@ -155,7 +157,7 @@ K BST<D, K>::max_key() const{
 template <typename D, typename K>
 D BST<D, K>::min_data() const{
     if(!root) {
-        throw runtime_error("tree is empty");
+        return D{}; 
     }
     Node* x = root;
     while(x->left){
@@ -167,7 +169,7 @@ D BST<D, K>::min_data() const{
 template <typename D, typename K>
 K BST<D, K>::min_key() const{
     if(!root) {
-        throw runtime_error("tree is empty");
+        return K{}; 
     }
     Node* x = root;
     while(x->left){

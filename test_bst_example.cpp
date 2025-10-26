@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
-#include "usecase.cpp"
 #include "BST.h"
 using namespace std;
 
@@ -342,7 +341,284 @@ void test_trim()
 //         cerr << "Error converting binary to hex : " << e.what() << endl;
 //     }
 // }
+void test_insert_char_keys()
+{
+    try
+    {
+        BST<string, char> bst;
+        bst.insert("apple", 'a');
+        bst.insert("cat", 'c');
+        bst.insert("banana", 'b');
+        
+        string bst_str = bst.to_string();
+        if (bst_str != "a c b")
+        {
+            cout << "Incorrect result of inserting char keys. Expected 'a b c' but got : " << bst_str << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error inserting char keys into bst : " << e.what() << endl;
+    }
+}
 
+void test_insert_double_keys()
+{
+    try
+    {
+        BST<int, double> bst;
+        bst.insert(100, 1.5);
+        bst.insert(200, 3.7);
+        bst.insert(150, 2.1);
+        
+        string bst_str = bst.to_string();
+        if (bst_str != "1.5 3.7 2.1")
+        {
+            cout << "Incorrect result of inserting double keys. Expected '1.5 2.1 3.7' but got : " << bst_str << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error inserting double keys into bst : " << e.what() << endl;
+    }
+}
+
+// Test edge case: removing from single-node tree
+void test_remove_single_node()
+{
+    try
+    {
+        BST<string, int> bst;
+        bst.insert("only", 5);
+        bst.remove(5);
+        
+        if (!bst.empty())
+        {
+            cout << "Incorrect result: BST should be empty after removing the only node" << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error removing single node from bst : " << e.what() << endl;
+    }
+}
+
+// Test case: removing node with two children
+void test_remove_two_children()
+{
+    try
+    {
+        int vals[7] = {10, 5, 15, 3, 7, 12, 20};
+        BST<string, int> bst;
+        for (int i = 0; i < 7; i++)
+        {
+            bst.insert("data", vals[i]);
+        }
+        
+        bst.remove(10);  // Remove root with two children
+        string bst_str = bst.to_string();
+        
+        // After removing 10, successor should take its place
+        if (bst_str.find("10") != string::npos)
+        {
+            cout << "Node with key 10 should have been removed but still exists" << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error removing node with two children : " << e.what() << endl;
+    }
+}
+
+// Test edge case: removing non-existent key
+void test_remove_nonexistent()
+{
+    try
+    {
+        BST<string, int> bst;
+        bst.insert("one", 1);
+        bst.insert("two", 2);
+        
+        bst.remove(99);  // Key doesn't exist
+        
+        // Tree should remain unchanged
+        string bst_str = bst.to_string();
+        if (bst_str != "1 2")
+        {
+            cout << "Tree should be unchanged after removing non-existent key. Expected '1 2' but got : " << bst_str << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error removing non-existent key : " << e.what() << endl;
+    }
+}
+
+// Test get with non-existent key
+void test_get_nonexistent()
+{
+    try
+    {
+        BST<string, int> bst;
+        bst.insert("exists", 10);
+        
+        string result = bst.get(999);  // Key doesn't exist
+        if (result != "")
+        {
+            cout << "Expected empty string for non-existent key, but got : " << result << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error getting non-existent key : " << e.what() << endl;
+    }
+}
+
+// Test max/min on empty tree
+void test_max_min_empty()
+{
+    try
+    {
+        BST<string, int> bst;
+        
+        // These should handle empty tree gracefully (return default values)
+        string max_d = bst.max_data();
+        int max_k = bst.max_key();
+        string min_d = bst.min_data();
+        int min_k = bst.min_key();
+        
+        if (max_d != "" || max_k != 0 || min_d != "" || min_k != 0)
+        {
+            cout << "Empty tree should return default values for max/min operations" << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error testing max/min on empty tree : " << e.what() << endl;
+    }
+}
+
+// Test successor edge cases
+void test_successor_edge_cases()
+{
+    try
+    {
+        int vals[5] = {5, 3, 7, 2, 4};
+        BST<string, int> bst;
+        for (int i = 0; i < 5; i++)
+        {
+            bst.insert("data", vals[i]);
+        }
+        
+        // Test successor of max key
+        int succ_max = bst.successor(7);
+        if (succ_max != 0)
+        {
+            cout << "Successor of max key should be 0, but got : " << succ_max << endl;
+        }
+        
+        // Test successor of non-existent key
+        int succ_none = bst.successor(100);
+        if (succ_none != 0)
+        {
+            cout << "Successor of non-existent key should be 0, but got : " << succ_none << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error testing successor edge cases : " << e.what() << endl;
+    }
+}
+
+// Test trim edge cases
+void test_trim_all_outside_range()
+{
+    try
+    {
+        BST<string, int> bst;
+        int vals[5] = {5, 3, 7, 2, 8};
+        for (int i = 0; i < 5; i++)
+        {
+            bst.insert("data", vals[i]);
+        }
+        
+        bst.trim(10, 20);  // All nodes outside range
+        
+        if (!bst.empty())
+        {
+            cout << "Tree should be empty after trimming all nodes outside range" << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error trimming all nodes outside range : " << e.what() << endl;
+    }
+}
+
+void test_trim_all_inside_range()
+{
+    try
+    {
+        BST<string, int> bst;
+        int vals[5] = {5, 3, 7, 2, 6};
+        for (int i = 0; i < 5; i++)
+        {
+            bst.insert("data", vals[i]);
+        }
+        
+        string before = bst.to_string();
+        bst.trim(1, 10);  // All nodes inside range
+        string after = bst.to_string();
+        
+        if (before != after)
+        {
+            cout << "Tree should be unchanged when all nodes are in range" << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error trimming with all nodes in range : " << e.what() << endl;
+    }
+}
+
+// Test in_order with single node
+void test_in_order_single()
+{
+    try
+    {
+        BST<string, int> bst;
+        bst.insert("single", 42);
+        
+        string result = bst.in_order();
+        if (result != "42")
+        {
+            cout << "Single node in_order should be '42', but got : " << result << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error testing in_order with single node : " << e.what() << endl;
+    }
+}
+
+// Test to_string with empty tree
+void test_to_string_empty()
+{
+    try
+    {
+        BST<string, int> bst;
+        string result = bst.to_string();
+        
+        if (result != "")
+        {
+            cout << "Empty tree to_string should be empty, but got : " << result << endl;
+        }
+    }
+    catch (exception &e)
+    {
+        cerr << "Error testing to_string with empty tree : " << e.what() << endl;
+    }
+}
 int main()
 {
 
@@ -362,7 +638,20 @@ int main()
     test_successor();
     test_in_order();
     test_trim();
-    // test_binhex();
+
+    test_insert_char_keys();
+    test_insert_double_keys();
+    test_remove_single_node();
+    test_remove_two_children();
+    test_remove_nonexistent();
+    test_get_nonexistent();
+    test_max_min_empty();
+    test_successor_edge_cases();
+    test_trim_all_outside_range();
+    test_trim_all_inside_range();
+    test_in_order_single();
+    test_to_string_empty();
+
 
     cout << "Testing completed" << endl;
 
