@@ -18,7 +18,7 @@ using namespace std;
 //  (none)
 //=================================================
 template <typename D, typename K>
-BST<D, K>::Node::Node(D d, K k) {11
+BST<D, K>::Node::Node(D d, K k) {
     data = d;
     key = k;
     left = nullptr;
