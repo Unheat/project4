@@ -416,12 +416,19 @@ void test_remove_two_children()
         }
         
         bst.remove(10);  // Remove root with two children
+        //check level-order 
         string bst_str = bst.to_string();
-        
-        // After removing 10, successor should take its place
-        if (bst_str.find("10") != string::npos)
+        string expected_str = "12 5 15 3 7 20";
+        if (bst_str != expected_str)
         {
-            cout << "Node with key 10 should have been removed but still exists" << endl;
+            cout << "Incorrect result of removing node with two children. Expected " << expected_str << " but got : " << bst_str << endl;
+        }
+        //check the in-order
+        string in_order_str = bst.in_order();
+        string expected_in_order = "3 5 7 12 15 20";
+        if (in_order_str != expected_in_order)
+        {
+             cout << "Incorrect in-order result after removing 10. Expected " << expected_in_order << " but got : " << in_order_str << endl;
         }
     }
     catch (exception &e)
@@ -514,14 +521,14 @@ void test_successor_edge_cases()
         int succ_max = bst.successor(7);
         if (succ_max != 0)
         {
-            cout << "Successor of max key should be 0, but got : " << succ_max << endl;
+            cout << "Successor of max key should be 0 (default int value), but got : " << succ_max << endl;
         }
         
         // Test successor of non-existent key
         int succ_none = bst.successor(100);
         if (succ_none != 0)
         {
-            cout << "Successor of non-existent key should be 0, but got : " << succ_none << endl;
+            cout << "Successor of non-existent key should be 0 (default int value), but got : " << succ_none << endl;
         }
     }
     catch (exception &e)
