@@ -3,7 +3,6 @@
 #include <sstream>
 #include <iostream>
 #include <queue>        // for std::queue
-#include <stack>        // for std::stack
 #include <functional>   // for std::function
 #include <stdexcept> 
 using namespace std;
