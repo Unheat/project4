@@ -1,4 +1,4 @@
-all: test
+all: test #default run make
 test: test_bst_example.o
 	g++ -o test test_bst_example.o
 test_bst_example.o: test_bst_example.cpp BST.h BST.cpp
