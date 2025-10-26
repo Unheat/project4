@@ -35,7 +35,6 @@ public:
     bool empty() const;
     void insert(D d, K k);
     D get(K k) const;
-    
     void remove(K k);
     D max_data() const;
     K max_key() const;

@@ -1,7 +1,10 @@
+all: test
 test: test_bst_example.o
 	g++ -o test test_bst_example.o
-	
-sorting_test.o: test_bst_example.cpp BTS.h BTS.cpp
+test_bst_example.o: test_bst_example.cpp BTS.h BTS.cpp
 	g++ -c test_bst_example.cpp
+usecase: usecase.cpp BST.h
+	g++ -o usecase usecase.cpp
 clean:
-	rm -f test *.o
+	rm -f test usecase *.o
+

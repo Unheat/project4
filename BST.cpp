@@ -255,7 +255,7 @@ void BST<D, K>::trim(K low, K high){
         node->left = trimRec(node->left);
         node->right = trimRec(node->right);
         return node;
-    }
+    };
     //call the recursive lambda function
     root = trimRec(root);
     if (root) root->parent = nullptr;
