@@ -225,17 +225,19 @@ string BST<D, K>::to_string() const{
 }
 template <typename D, typename K>
 string BST<D, K>::in_order() const{
-    string result;
+    stringstream ss;
+    bool first = true; //no space on first node
     // recursive lambda
     function<void(Node*)> inorder = [&](Node* x) {
         if (x == nullptr) return;
         inorder(x->left);
-        if (!result.empty()) result += " ";
-        result += std::to_string(x->key);
+        if (!first) ss << " ";
+        ss << x->key;
+        first = false;
         inorder(x->right);
     };
     inorder(root);
-    return result;
+    return ss.str();
 }
 template <typename D, typename K>
 void BST<D, K>::trim(K low, K high){

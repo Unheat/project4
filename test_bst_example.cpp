@@ -300,88 +300,192 @@ void test_trim()
         cerr << "Error in trimming the bst : " << e.what() << endl;
     }
 }
-
-// void test_binhex()
-// {
-//     try
-//     {
-//         BST<string, string> *bst1 = create_bst<string, string>("binhex.txt");
-//         string bin1 = "111010100101";
-//         string expected_hex1 = "EA5";
-
-//         string hex1 = convert<string, string>(bst1, bin1);
-//         delete bst1;
-
-//         if (hex1 != expected_hex1)
-//         {
-//             cout << "Incorrect result converting " << bin1 << " to hex. Expected : " << expected_hex1 << ", but got : " << hex1 << endl;
-//         }
-//     }
-//     catch (exception &e)
-//     {
-//         cerr << "Error converting binary to hex : " << e.what() << endl;
-//     }
-
-//     try
-//     {
-//         BST<string, string> *bst2 = create_bst<string, string>("binhex.txt");
-//         string bin2 = "110101";
-//         string expected_hex2 = "35";
-
-//         string hex2 = convert<string, string>(bst2, bin2);
-//         delete bst2;
-
-//         if (hex2 != expected_hex2)
-//         {
-//             cout << "Incorrect result converting " << bin2 << " to hex. Expected : " << expected_hex2 << ", but got : " << hex2 << endl;
-//         }
-//     }
-//     catch (exception &e)
-//     {
-//         cerr << "Error converting binary to hex : " << e.what() << endl;
-//     }
-// }
-void test_insert_char_keys()
+void test_char_keys()
 {
     try
     {
         BST<string, char> bst;
+        
+        
         bst.insert("apple", 'a');
         bst.insert("cat", 'c');
         bst.insert("banana", 'b');
+        bst.insert("zebra", 'z');
+        bst.insert("middle", 'm');
         
-        string bst_str = bst.to_string();
-        if (bst_str != "a c b")
+        //test level order for insert
+        string expected_level = "a c b z m";
+        if (bst.to_string() != expected_level)
         {
-            cout << "Incorrect result of inserting char keys. Expected 'a b c' but got : " << bst_str << endl;
+            cout << "Incorrect level-order after insert. Expected '" << expected_level << "' but got: " << bst.to_string() << endl;
+        }
+         //test inorder for insert
+        string expected_inorder = "a b c m z";
+        if (bst.in_order() != expected_inorder)
+        {
+            cout << "Incorrect in-order after insert. Expected '" << expected_inorder << "' but got: " << bst.in_order() << endl;
+        }
+        //test get
+        if (bst.get('m') != "middle")
+        {
+            cout << "Incorrect get('m'). Expected 'middle' but got: " << bst.get('m') << endl;
+        }
+        
+        //test min/max
+        if (bst.min_key() != 'a')
+        {
+            cout << "Incorrect min_key. Expected 'a' but got: " << bst.min_key() << endl;
+        }
+        if (bst.max_key() != 'z')
+        {
+            cout << "Incorrect max_key. Expected 'z' but got: " << bst.max_key() << endl;
+        }
+        
+        if (bst.min_data() != "apple"){
+            cout << "Incorrect min_dcted 'apple' but got: " << bst.min_data() << endl;
+        }
+        if (bst.max_data() != "zebra")
+        {
+            cout << "Incorrect max_data. Expected 'zebra' but got: " << bst.max_data() << endl;
+        }
+        
+        if (bst.successor('c') != 'm')
+        {
+            cout << "Incorrect successor of 'c'. Expected 'm' but got: " << bst.successor('c') << endl;
+        }
+        
+        // test trim 
+        bst.trim('b', 'm'); // Keep keys in the inclusive range ['b', 'm']
+        
+        string expected_trim_level = "c b m";
+        if (bst.to_string() != expected_trim_level) {
+            cout << "Incorrect level-order after trim. Expected '" << expected_trim_level << "' but got : " << bst.to_string() << endl;
+        }
+        
+        string expected_trim_inorder = "b c m";
+        if (bst.in_order() != expected_trim_inorder) {
+            cout << "Incorrect in-order after trim. Expected '" << expected_trim_inorder << "' but got : " << bst.in_order() << endl;
+        }
+
+        // test remove 
+        bst.remove('b'); // Remove a leaf node from the trimmed tree
+        
+        string expected_remove_level = "c m";
+        if (bst.to_string() != expected_remove_level)
+        {
+            cout << "Incorrect level-order after remove. Expected '" << expected_remove_level << "' but got : " << bst.to_string() << endl;
+        }
+
+        //test empty
+        bst.remove('c');
+        bst.remove('m');
+        string expected_empty = "";
+        if (bst.to_string() != expected_empty)
+        {
+            cout << "Incorrect level-order after remove. Expected '" << expected_remove_level << "' but got : " << bst.to_string() << endl;
         }
     }
     catch (exception &e)
     {
-        cerr << "Error inserting char keys into bst : " << e.what() << endl;
+        cerr << "Error in char key tests : " << e.what() << endl;
     }
 }
 
-void test_insert_double_keys()
+
+// Comprehensive test with double keys
+void test_double_keys()
 {
     try
     {
         BST<int, double> bst;
+        
+        // Test insert and to_string (level-order)
         bst.insert(100, 1.5);
         bst.insert(200, 3.7);
         bst.insert(150, 2.1);
-        
+        bst.insert(222, 2.5);
+        bst.insert(223, 1.3);
         string bst_str = bst.to_string();
-        if (bst_str != "1.5 3.7 2.1")
+        if (bst_str != "1.5 1.3 3.7 2.1 2.5")
         {
-            cout << "Incorrect result of inserting double keys. Expected '1.5 2.1 3.7' but got : " << bst_str << endl;
+            cout << "Incorrect to_string with double keys. Expected '1.5 3.7 2.1' but got : " << bst_str << endl;
         }
+        
+        // Test in_order (sorted order)
+        string in_order_str = bst.in_order();
+        if (in_order_str != "1.3 1.5 2.1 2.5 3.7")
+        {
+            cout << "Incorrect in_order with double keys. Expected '1.3 1.5 2.1 2.5 3.7' but got : " << in_order_str << endl;
+        }
+        
+        // Test get
+        int data = bst.get(2.1);
+        if (data != 150)
+        {
+            cout << "Incorrect get result with double key. Expected 150 but got : " << data << endl;
+        }
+        
+        // Test min_key and max_key
+        double min_k = bst.min_key();
+        double max_k = bst.max_key();
+        if (min_k != 1.3 || max_k != 3.7)
+        {
+            cout << "Incorrect min/max key with double keys. Expected min=1.5, max=3.7 but got min=" 
+                 << min_k << ", max=" << max_k << endl;
+        }
+        
+        // Test min_data and max_data
+        int min_d = bst.min_data();
+        int max_d = bst.max_data();
+        if (min_d != 223  || max_d != 200)
+        {
+            cout << "Incorrect min/max data with double keys. Expected min=100, max=200 but got min=" 
+                 << min_d << ", max=" << max_d << endl;
+        }
+        
+        // Test successor
+        double succ = bst.successor(1.5);
+        if (succ != 2.1)
+        {
+            cout << "Incorrect successor with double keys. Expected 2.1 but got : " << succ << endl;
+        }
+
+        
+        //test trim
+        bst.trim(2.1, 3.7); 
+        
+        // Verify final state after trim
+        if (bst.to_string() != "3.7 2.1 2.5") {
+            cout << "DOUBLE KEYS: Incorrect level-order after trim. Expected '3.7 2.1 2.5' but got : " << bst.to_string() << endl;
+        }
+        if (bst.in_order() != "2.1 2.5 3.7") {
+            cout << "DOUBLE KEYS: Incorrect in-order after trim. Expected '2.2 3.3 4.4' but got : " << bst.in_order() << endl;
+        }
+
+        
+        // Test remove
+        bst.remove(2.1);
+        bst_str = bst.to_string();
+        if (bst_str != "3.7 2.5")
+        {
+            cout << "Incorrect tree after removing double key. Expected '3.7 2.5' but got : " << bst_str << endl;
+        }
+
+        // Test empty after removing all
+        bst.remove(2.5);
+        bst.remove(3.7);
+        if (!bst.empty())
+        {
+            cout << "Tree should be empty after removing all double keys" << endl;
+        }
+
     }
     catch (exception &e)
     {
-        cerr << "Error inserting double keys into bst : " << e.what() << endl;
+        cerr << "Error in double key tests : " << e.what() << endl;
     }
 }
+
 
 // Test edge case: removing from single-node tree
 void test_remove_single_node()
@@ -646,8 +750,8 @@ int main()
     test_in_order();
     test_trim();
 
-    test_insert_char_keys();
-    test_insert_double_keys();
+    test_char_keys();
+    test_double_keys();
     test_remove_single_node();
     test_remove_two_children();
     test_remove_nonexistent();
