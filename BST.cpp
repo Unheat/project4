@@ -1,3 +1,8 @@
+// ************************************
+//  CS 271
+//  Project 4
+//  An - Pedro
+// ************************************
 #include "BST.h"
 #include <string>
 #include <sstream>

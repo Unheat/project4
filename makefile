@@ -1,8 +1,8 @@
 all: test #default run make
-test: test_bst_example.o
-	g++ -o test test_bst_example.o
-test_bst_example.o: test_bst_example.cpp BST.h BST.cpp
-	g++ -c test_bst_example.cpp
+test: bst_test.o
+	g++ -o test bst_test.o
+bst_test.o: bst_test.cpp BST.h BST.cpp
+	g++ -c bst_test.cpp
 usecase: usecase.cpp BST.h
 	g++ -o usecase usecase.cpp
 clean:
